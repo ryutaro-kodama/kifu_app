@@ -1,4 +1,5 @@
-# Created by https://www.gitignore.io/api/linux,django
+# Created by https://www.gitignore.io/api/django
+# Edit at https://www.gitignore.io/?templates=django
 
 ### Django ###
 *.log
@@ -7,4 +8,5 @@
 __pycache__/
 local_settings.py
 db.sqlite3
+db.sqlite3-journal
 media

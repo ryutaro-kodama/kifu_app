@@ -6,14 +6,23 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class LargeClass(models.Model):
     name = models.CharField(max_length=10)
 
+    def __str__(self):
+        return self.name
+
 class MiddleClass(models.Model):
     large_class = models.ForeignKey(LargeClass, on_delete=models.CASCADE)
     name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
 
 class SmallClass(models.Model):
     middle_class = models.ForeignKey(MiddleClass, on_delete=models.CASCADE)
     name = models.CharField(max_length=10)
     # order = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
 
 class Information(models.Model):
     date = models.DateTimeField()
@@ -27,8 +36,14 @@ class Information(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.date
+
 class Kifu(models.Model):
     information = models.ForeignKey(Information, on_delete=models.CASCADE)
     number = models.IntegerField(validators=[MinValueValidator(0)])
     te = models.CharField(max_length=20)
     # comment = models.CharField(max_length=900)
+
+    def __str__(self):
+        return self.te

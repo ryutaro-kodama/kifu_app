@@ -5,9 +5,16 @@
         <title>Kifu APP</title>
     </head>
     <body>
-        <!-- {% for x in data %}
-        <h3>{{ x }}</h3>
-        {% endfor %} -->
-        <h3>{{ data }}</h3>
+        {% for each_data in data %}
+            <h3>{{ each_data }}</h3>
+            <table border="1">
+                <tr>
+                    <td>{{ each_data.date }}</td>
+                    <td>{{ each_data.sente }}</td>
+                    <td>{{ each_data.gote }}</td>
+                    <td>{{ each_data.small_class }}</td>
+                </tr>
+            </table>
+        {% endfor %}
     </body>
 </html>

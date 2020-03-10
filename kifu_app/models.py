@@ -37,7 +37,7 @@ class Information(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.date
+        return self.date.strftime("%Y/%m/%d_%H:%M:%S")
 
 class Kifu(models.Model):
     information = models.ForeignKey(Information, on_delete=models.CASCADE)

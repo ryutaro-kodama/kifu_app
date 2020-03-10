@@ -6,4 +6,5 @@ app_name = 'kifu_app'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('informationList', views.informationList, name='informationList'),
 ]

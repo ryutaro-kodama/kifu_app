@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 # from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Information
 
 # Create your views here.
@@ -25,6 +25,10 @@ class InformationListView(ListView):
 #     data = Information.objects.all()
 #     return render(request, 'informationList.html', {'data': data})
 
-def informationDetail(request, information_id):
-    detail = get_object_or_404(Information, pk=information_id)
-    return render(request, 'informationDetail.html', {'detail': detail})
+class InformationDetailView(DetailView):
+    template_name = 'informationDetail.html'
+    model = Information
+
+# def informationDetail(request, information_id):
+#     detail = get_object_or_404(Information, pk=information_id)
+#     return render(request, 'informationDetail.html', {'detail': detail})

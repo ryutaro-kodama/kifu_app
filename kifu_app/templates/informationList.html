@@ -9,7 +9,7 @@
             <h3>{{ each_data }}</h3>
             <table border="1">
                 <tr>
-                    <td>{{ each_data.date }}</td>
+                    <td><a href="{% url 'kifu_app:informationDetail' each_data.id %}">{{ each_data.date }}</a></td>
                     <td>{{ each_data.sente }}</td>
                     <td>{{ each_data.gote }}</td>
                     <td>{{ each_data.small_class }}</td>

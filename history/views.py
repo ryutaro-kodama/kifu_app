@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 # from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
 from django.views.generic import ListView, DetailView
-from .models import Information
+from kifu_app.models import Information
 
 # Create your views here.
 

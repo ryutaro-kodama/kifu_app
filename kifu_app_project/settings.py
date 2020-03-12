@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'kifu_app',
     'history',
+    'add_kifu',
+    'kifu_app',
 ]
 
 MIDDLEWARE = [

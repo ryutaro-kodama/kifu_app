@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('kifu_app/', include('kifu_app.urls')),
+    path('add_kifu/', include('add_kifu.urls')),
     path('history/', include('history.urls')),
+    path('kifu_app/', include('kifu_app.urls')),
     path('admin/', admin.site.urls),
 ]

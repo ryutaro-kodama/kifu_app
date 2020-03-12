@@ -1,8 +1,8 @@
 import datetime as dt
 
-from piece import *
-from convert import NumberConvert as nc
-from convert import PieceConvert as pc
+from .piece import *
+from ..conversion import NumberConvert as nc
+from ..conversion import PieceConvert as pc
 
 
 class Operation():

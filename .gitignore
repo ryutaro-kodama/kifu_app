@@ -12,6 +12,7 @@ db.sqlite3-journal
 media
 
 kifu_app/lib
-history/lib/main.py
+demoWHC.py
+history/lib/demo.py
 history/lib/warsHtmlConvert.py
 history/lib/warsToKif.py

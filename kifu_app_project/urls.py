@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('kifu_app/', include('kifu_app.urls')),
+    path('history/', include('history.urls')),
     path('admin/', admin.site.urls),
 ]

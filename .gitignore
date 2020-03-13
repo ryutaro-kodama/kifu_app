@@ -18,3 +18,5 @@ add_kifu/lib/operation/htmlConvert.py
 add_kifu/lib/toKif.py
 kifu_app/lib
 history/lib
+
+.env

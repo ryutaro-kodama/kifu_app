@@ -3,13 +3,19 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.views.generic import ListView, DetailView
 from .models import Information
 
+import environ
+
 # Create your views here.
 
 import datetime
 
+env = environ.Env(DEBUG=(bool,False))
+env.read_env('.env')
+
 def index(request):
     today = datetime.date.today()
-    return render(request, 'index.html', {'today': today})
+    name = env.get_value('QIITA_NAME', str)     # 追加
+    return render(request, 'index.html', {'today': today, 'name': name})
 
 class InformationListView(ListView):
     template_name = 'informationList.html'

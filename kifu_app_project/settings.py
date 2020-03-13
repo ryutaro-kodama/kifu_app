@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+import environ
+
+env = environ.Env(DEBUG=(bool,False))
+env.read_env('.env')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -77,14 +82,7 @@ WSGI_APPLICATION = 'kifu_app_project.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kifu_app_db',
-        'USER': 'shogi_app',
-        'PASSWORD': '09drunm14',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+    'default':env.db(),
 }
 
 

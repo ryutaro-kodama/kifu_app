@@ -20,14 +20,20 @@ class OperateSelenium():
             self.driver.execute_script(f'document.cookie = "{cookie}";')
 
     # target_idが表示するまでtime秒待機
-    def wait(self, target_id, time):
+    def waitUntilId(self, target_id, time):
         try:
             WebDriverWait(self.driver, time).until(EC.presence_of_element_located((By.ID, target_id)))
         except TimeoutException as e:
             print(e)
             print("予定していたIDが表示されませんでした")
-            self.close()
-            self.quit()
+
+    # target_idがtextを表示するまでtime秒待機
+    def waitUntilText(self, target_id, text, time):
+        try:
+            WebDriverWait(self.driver, time).until(EC.text_to_be_present_in_element((By.ID, target_id), text))
+        except TimeoutException as e:
+            print(e)
+            print("予定していたテキストが表示されませんでした")
 
     def close(self):
         self.driver.close()

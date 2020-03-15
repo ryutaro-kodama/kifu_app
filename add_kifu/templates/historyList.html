@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Kifu APP</title>
+    </head>
+    <body>
+        {% for each_data in object_list %}
+            <h3>{{ each_data }}</h3>
+            <table border="1">
+                <tr>
+                    <!-- <td><a href="{% url 'history:detail' each_data.id %}">{{ each_data.date }}</a></td> -->
+                    <td>{{ each_data.game_id }}</td>
+                    <td>{{ each_data.my_result }}</td>
+                    <td>{{ each_data.save_limit }}</td>
+                </tr>
+            </table>
+        {% endfor %}
+        <form action="{% url 'add_kifu:sync' %}" method="GET">
+            <input type="submit" value="同期" name="sync">
+        </form>
+    </body>
+</html>

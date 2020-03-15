@@ -5,6 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import chromedriver_binary
 
+from ..myNotDisplayException import MyNotDisplayException
+
 class OperateSelenium():
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -26,6 +28,7 @@ class OperateSelenium():
         except TimeoutException as e:
             print(e)
             print("予定していたIDが表示されませんでした")
+            raise MyNotDisplayException("期待したページが見つかりません")
 
     # target_idがtextを表示するまでtime秒待機
     def waitUntilText(self, target_id, text, time):
@@ -34,6 +37,7 @@ class OperateSelenium():
         except TimeoutException as e:
             print(e)
             print("予定していたテキストが表示されませんでした")
+            raise MyNotDisplayException("期待したページが見つかりません")
 
     def close(self):
         self.driver.close()

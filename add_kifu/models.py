@@ -11,3 +11,9 @@ class HistoryList(models.Model):
 
     def __str__(self):
         return self.game_id
+
+class LatestSync(models.Model):
+    latest_sync = models.DateTimeField()
+
+    def __str__(self):
+        return self.latest_sync.strftime("%Y/%m/%d_%H:%M:%S")

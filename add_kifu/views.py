@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_list_or_404
 from django.views.generic import ListView, DetailView
 from django.utils.timezone import make_aware
-from .models import HistoryList
+from .models import HistoryList, LatestSync
 
 from selenium.common.exceptions import TimeoutException
 import datetime as dt
@@ -16,25 +16,37 @@ class HistoryListView(ListView):
     paginate_by = 10
     queryset = HistoryList.objects.order_by('id')
 
-def sync(request):
-    # old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime(2020, 5, 1, 23, 59, 59)))     # データ削除確認用
-    old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime.now()))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["latest_sync"] = LatestSync.objects.get_or_create(id=1)[0].latest_sync.strftime("%Y-%m-%d %H:%M:%S")
+        return context
 
+# 対局履歴一覧から、gameIDをDBへ保存
+def sync(request):
+    now = make_aware(dt.datetime.now())
+    old_data = HistoryList.objects.filter(save_limit__lt=now)
+    # old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime(2020, 5, 1, 23, 59, 59)))     # データ削除確認用
     for each_old_data in old_data:
         each_old_data.delete()
 
     # new_game_data = [["ryu914-sho123-20200319_174123", 1]]
     new_game_data = __getHistoryList()
-    if len(new_game_data) == 0:
-        # 新規の棋譜が無ければそのまま
-        return redirect('add_kifu:historyList')
+    if len(new_game_data) != 0:
+        # 新規データの保存
+        history_list_insert = []
+        for each_new_game_data in reversed(new_game_data):
+            history_list_insert.append( HistoryList(game_id=each_new_game_data[0],
+                                                    my_result=each_new_game_data[1],
+                                                    save_limit=__get30DaysLater(each_new_game_data[0])) )
+        HistoryList.objects.bulk_create(history_list_insert)
 
-    history_list_insert = []
-    for each_new_game_data in reversed(new_game_data):
-        history_list_insert.append( HistoryList(game_id=each_new_game_data[0],
-                                                my_result=each_new_game_data[1],
-                                                save_limit=__get30DaysLater(each_new_game_data[0])) )
-    HistoryList.objects.bulk_create(history_list_insert)
+    # 最終同期時刻の更新
+    LatestSync.objects.update_or_create(
+        id = 1,
+        defaults = {
+            "latest_sync": now
+        }
+    )
 
     return redirect('add_kifu:historyList')
 

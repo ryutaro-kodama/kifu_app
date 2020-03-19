@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_list_or_404
 from django.views.generic import ListView, DetailView
 from django.utils.timezone import make_aware
 from .models import HistoryList
@@ -17,7 +17,12 @@ class HistoryListView(ListView):
     queryset = HistoryList.objects.order_by('id')
 
 def sync(request):
-    print("OK")
+    # old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime(2020, 5, 1, 23, 59, 59)))     # データ削除確認用
+    old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime.now()))
+
+    for each_old_data in old_data:
+        each_old_data.delete()
+
     # new_game_data = [["ryu914-sho123-20200319_174123", 1]]
     new_game_data = __getHistoryList()
     if len(new_game_data) == 0:
@@ -25,19 +30,18 @@ def sync(request):
         return redirect('add_kifu:historyList')
 
     history_list_insert = []
-    for each_new_game_data in new_game_data:
-        # each_new_game_data.append(__get30DaysLater(each_new_game_data[0]))
+    for each_new_game_data in reversed(new_game_data):
         history_list_insert.append( HistoryList(game_id=each_new_game_data[0],
                                                 my_result=each_new_game_data[1],
                                                 save_limit=__get30DaysLater(each_new_game_data[0])) )
-
     HistoryList.objects.bulk_create(history_list_insert)
+
     return redirect('add_kifu:historyList')
 
 def __getHistoryList():
     # DB内の最新のゲームIDの取得
     try:
-        last_game_id = HistoryList.objects.order_by("id").last()["game_id"]
+        last_game_id = HistoryList.objects.order_by("id").last().game_id
     except:
         last_game_id = ''
         # last_game_id = 'ryu914-YMTAROO-20200314_113531'
@@ -88,5 +92,5 @@ def __get30DaysLater(game_id):
     else:
         datetime_formatted = dt.datetime.strptime(datetime, "%Y%m%d_%H%M%S")
         save_limit = datetime_formatted + dt.timedelta(days=30)
-        return make_aware(save_limit.strftime("%Y-%m-%d %H:%M:%S"))
+        return make_aware(save_limit).strftime("%Y-%m-%d %H:%M:%S")
 

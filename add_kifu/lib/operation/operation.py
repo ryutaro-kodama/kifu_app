@@ -164,7 +164,7 @@ class Operation():
     def getFilename(self, sente, gote, datetime):
         datetime_formatted = dt.datetime.strptime(datetime, "%Y-%m-%d %H:%M:%S")
         datetime_filename = datetime_formatted.strftime("%Y%m%d_%H%M%S")
-        return datetime_filename + "-" + sente + "-" + gote
+        return datetime_filename + "-" + sente + "-" + gote + ".kifu"
 
     # @param
     ## result_reason: 勝敗がついた理由
@@ -189,6 +189,20 @@ class Operation():
             message = f'引き分け'
 
         return f"まで{count}手で{message}"
+
+    def makeTextList(self, datetime, players, kifu, result):
+        text_list = [f'開始日時：{datetime}',
+                     f'先手：{players["sente"]}',
+                     f'後手：{players["gote"]}',
+                     '']
+
+        for x in range(len(kifu)-1):
+            text_list.append(f'{x+1}  {kifu[x]}')
+
+        text_list.append('')
+        text_list.append(result)
+
+        return text_list
 
     def printBoard(self):
         for kind in self.piece:

@@ -17,6 +17,12 @@ class Piece():
     def captured(self):
         self.player = (self.player + 1) % 2
 
+    def promote(self):
+        pass
+
+    def demote(self):
+        pass
+
 ## 以下、子クラスとして駒の種類を定義
 class Fu(Piece):
     def __init__(self, x, y, player):

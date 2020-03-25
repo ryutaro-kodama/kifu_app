@@ -1,14 +1,25 @@
-from django.shortcuts import render, redirect, get_list_or_404
+from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.utils.timezone import make_aware
 from .models import HistoryList, LatestSync
+from kifu_app_project.settings import BASE_DIR
 
 from selenium.common.exceptions import TimeoutException
 import datetime as dt
 import re
 
 from .lib.historyList.getHistoryList import GetHistoryList
-from .lib.myNotDisplayException import MyNotDisplayException
+from .lib.operation.operation import Operation
+from .lib.operation.htmlConvert import HtmlConvert
+from .lib.operation.scraping import Scraping
+from .lib.exception.myNotDisplayException import MyNotDisplayException
+from .lib.exception.cantScrapingException import CantScrapingException
+from .lib.writeFile import WriteFile
+
+import environ
+
+env = environ.Env(DEBUG=(bool,False))
+env.read_env('.env')
 
 class HistoryListView(ListView):
     template_name = 'historyList.html'
@@ -106,3 +117,59 @@ def __get30DaysLater(game_id):
         save_limit = datetime_formatted + dt.timedelta(days=30)
         return make_aware(save_limit).strftime("%Y-%m-%d %H:%M:%S")
 
+def save(request):
+    id_data = request.GET.getlist("game_id_data")
+
+    for x in id_data:
+        history_list_object = get_object_or_404(HistoryList, pk=x)
+        game_id = history_list_object.game_id
+        try:
+            text_list, filename = __getKifuData(game_id)
+        except CantScrapingException as e:
+            print(e)
+            print("スクレイピングが出来ませんでした")
+            return redirect('add_kifu:historyList')
+        save_path = BASE_DIR + env.get_value("KIFU_PATH_FROM_ROOT") + filename
+        WriteFile.writeFile(save_path, text_list)
+
+        history_list_object.saved = 1
+        history_list_object.save()
+
+    return redirect('add_kifu:historyList')
+
+def __getKifuData(game_id):
+    url = env.get_value('HISTORY_URL_ROOT', str) + game_id
+
+    text = Scraping(url).scrape()
+
+    hc = HtmlConvert(text)
+    ope = Operation()
+    kifu = []
+
+    symbol_list = hc.extraction()
+
+    for symbol in symbol_list:
+        old_x, old_y, x, y, name, promoted = hc.convert(symbol)
+        data = ope.operate(old_x, old_y, x, y, name, promoted)
+        te = ope.getKifu(data)
+        kifu.append(te)
+
+    try:
+        hc.setDatetime()
+        hc.setPlayers()
+        hc.setResultReason()
+    except CantScrapingException as e:
+        print(e)
+        print("スクレイピングが出来ませんでした")
+        raise CantScrapingException("スクレイピングが出来ませんでした")
+
+    kifu.append(ope.getFinalMove(hc.result_reason))
+
+    datetime = ope.getDatetime(hc.datetime)
+    players = ope.getPlayers(hc.players["sente"], hc.players["s_rank"], hc.players["gote"], hc.players["g_rank"])
+    filename = ope.getFilename(hc.players["sente"], hc.players["gote"], hc.datetime)
+    result = ope.getResult(len(kifu)-1, hc.result, len(kifu)%2)
+
+    text_list = ope.makeTextList(datetime, players, kifu, result)
+
+    return text_list, filename

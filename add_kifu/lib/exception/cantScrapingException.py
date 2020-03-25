@@ -1,0 +1,2 @@
+class CantScrapingException(Exception):
+    pass

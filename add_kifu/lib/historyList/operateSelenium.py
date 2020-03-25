@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import chromedriver_binary
 
-from ..myNotDisplayException import MyNotDisplayException
+from ..exception.myNotDisplayException import MyNotDisplayException
 
 class OperateSelenium():
     def __init__(self):

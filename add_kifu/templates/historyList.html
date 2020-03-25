@@ -9,16 +9,18 @@
         <form action="{% url 'add_kifu:sync' %}" method="GET">
             <input type="submit" value="同期" name="sync">
         </form>
-        {% for each_data in object_list %}
-            <h3>{{ each_data }}</h3>
+        <form action="{% url 'add_kifu:save' %}" method="GET">
             <table border="1">
+                {% for each_data in object_list %}
                 <tr>
-                    <!-- <td><a href="{% url 'history:detail' each_data.id %}">{{ each_data.date }}</a></td> -->
+                    <td><input type="checkbox" name="game_id_data" value="{{each_data.id}}" ></td>
                     <td>{{ each_data.game_id }}</td>
                     <td>{{ each_data.my_result }}</td>
                     <td>{{ each_data.save_limit }}</td>
                 </tr>
+                {% endfor %}
             </table>
-        {% endfor %}
+            <input type="submit" name="submit" value="チェックしたものを保存">
+        </form>
     </body>
 </html>

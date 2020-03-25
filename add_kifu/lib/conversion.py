@@ -27,7 +27,7 @@ class PieceConvert():
                       'Hisya':'飛', 'Ryu':'竜',
                       'Kaku':'角', 'Uma':'馬',
                       'Ou':'王'}
-    nari_list = {'Fu':'To', 'Kyo':'NariKyo', 'Kei':'NariKei', 'Gin':'NariGin', 'HiSya':'Ryu', 'Kaku':'Uma'}
+    nari_list = {'Fu':'To', 'Kyo':'NariKyo', 'Kei':'NariKei', 'Gin':'NariGin', 'Hisya':'Ryu', 'Kaku':'Uma'}
 
     @staticmethod
     def eigo2koma(eigo):

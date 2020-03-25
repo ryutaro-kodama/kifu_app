@@ -8,6 +8,7 @@ class HistoryList(models.Model):
     my_result = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(3)])
     #自分勝ち:0, 相手勝ち:1, 引き分け:2
     save_limit = models.DateTimeField(null=True, blank=True)
+    saved = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(3)], default=0)
 
     def __str__(self):
         return self.game_id

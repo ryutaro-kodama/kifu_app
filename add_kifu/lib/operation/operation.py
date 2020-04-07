@@ -110,7 +110,7 @@ class Operation():
     # @param
     ## data = [(前座標のペア), (後座標のペア), 移動前の駒名, '同'フラグ, '打'フラグ, '成'フラグ]
     def getKifu(self, data):
-        old_position = '(' + str(data[0][0]) + str(data[0][1]) + ')'
+        # old_position = '(' + str(data[0][0]) + str(data[0][1]) + ')'
 
         if data[3]:
             new_position = "同　"
@@ -124,7 +124,7 @@ class Operation():
             name = pc.eigo2koma(data[2])
             promotion = "成"
         else:
-            name = pc.promote(pc.eigo2koma(data[2]))
+            name = pc.promote(pc.eigo2koma(data[2]))[0]
             promotion = ""
 
         if data[4]:

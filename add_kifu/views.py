@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from django.views.generic import ListView, DetailView
-from django.utils.timezone import make_aware
+from django.utils.timezone import localtime
 from .models import HistoryList, LatestSync
+from history.models import Information, SmallClass
 from kifu_app_project.settings import BASE_DIR
 
 from selenium.common.exceptions import TimeoutException
@@ -25,16 +26,16 @@ class HistoryListView(ListView):
     template_name = 'historyList.html'
     model = HistoryList
     paginate_by = 10
-    queryset = HistoryList.objects.order_by('id')
+    queryset = HistoryList.objects.filter(saved=0).order_by('id')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["latest_sync"] = LatestSync.objects.get_or_create(id=1)[0].latest_sync.strftime("%Y-%m-%d %H:%M:%S")
+        context["latest_sync"] = localtime(LatestSync.objects.get_or_create(id=1)[0].latest_sync)
         return context
 
 # 対局履歴一覧から、gameIDをDBへ保存
 def sync(request):
-    now = make_aware(dt.datetime.now())
+    now = dt.datetime.now(dt.timezone(dt.timedelta(hours=9)))
     old_data = HistoryList.objects.filter(save_limit__lt=now)
     # old_data = HistoryList.objects.filter(save_limit__lt=make_aware(dt.datetime(2020, 5, 1, 23, 59, 59)))     # データ削除確認用
     for each_old_data in old_data:
@@ -113,18 +114,21 @@ def __get30DaysLater(game_id):
         print("対局日情報が見つかりません")
         return "2099-12-31 23:59:59"
     else:
-        datetime_formatted = dt.datetime.strptime(datetime, "%Y%m%d_%H%M%S")
+        datetime_formatted = dt.datetime.strptime(datetime, "%Y%m%d_%H%M%S").astimezone(dt.timezone.utc)
         save_limit = datetime_formatted + dt.timedelta(days=30)
-        return make_aware(save_limit).strftime("%Y-%m-%d %H:%M:%S")
+        return save_limit
 
 def save(request):
+    ope = Operation()
     id_data = request.GET.getlist("game_id_data")
 
     for x in id_data:
         history_list_object = get_object_or_404(HistoryList, pk=x)
         game_id = history_list_object.game_id
         try:
-            text_list, filename = __getKifuData(game_id)
+            filename, datetime, players, kifu, result = __getKifuData(game_id, ope)
+            text_list = ope.makeTextList(datetime, players, kifu, result)
+            # text_list = [対局日時, 先手, 後手, , 1手目, ..., 最終手, , 勝敗結果]
         except CantScrapingException as e:
             print(e)
             print("スクレイピングが出来ませんでした")
@@ -135,15 +139,24 @@ def save(request):
         history_list_object.saved = 1
         history_list_object.save()
 
+        information = Information(
+            date = dt.datetime.strptime(datetime + '+0900', "%Y/%m/%d %H:%M:%S%z"),
+            sente = players["sente"],
+            gote = players["gote"],
+            result = (len(kifu)+1) % 2,     # TODO 引き分けに未対応
+            my_result = history_list_object.my_result,
+            small_class = get_object_or_404(SmallClass, pk=1)       # TODO 小分類が固定値
+        )
+        information.save()
+
     return redirect('add_kifu:historyList')
 
-def __getKifuData(game_id):
+def __getKifuData(game_id, ope):
     url = env.get_value('HISTORY_URL_ROOT', str) + game_id
 
     text = Scraping(url).scrape()
 
     hc = HtmlConvert(text)
-    ope = Operation()
     kifu = []
 
     symbol_list = hc.extraction()
@@ -170,6 +183,4 @@ def __getKifuData(game_id):
     filename = ope.getFilename(hc.players["sente"], hc.players["gote"], hc.datetime)
     result = ope.getResult(len(kifu)-1, hc.result, len(kifu)%2)
 
-    text_list = ope.makeTextList(datetime, players, kifu, result)
-
-    return text_list, filename
+    return filename, datetime, players, kifu, result

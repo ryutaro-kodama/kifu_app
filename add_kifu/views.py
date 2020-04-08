@@ -23,7 +23,7 @@ env = environ.Env(DEBUG=(bool,False))
 env.read_env('.env')
 
 class HistoryListView(ListView):
-    template_name = 'historyList.html'
+    template_name = 'add_kifu/historyList.html'
     model = HistoryList
     paginate_by = 10
     queryset = HistoryList.objects.filter(saved=0).order_by('id')

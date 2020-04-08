@@ -5,11 +5,11 @@ from .models import Information
 # Create your views here.
 
 class InformationListView(ListView):
-    template_name = 'list.html'
+    template_name = 'history/list.html'
     model = Information
     paginate_by = 10
     queryset = Information.objects.order_by('date')
 
 class InformationDetailView(DetailView):
-    template_name = 'detail.html'
+    template_name = 'history/detail.html'
     model = Information

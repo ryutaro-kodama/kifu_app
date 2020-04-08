@@ -1,3 +1,4 @@
+
 function 将棋タイム(args){
     if(将棋タイム.引数確認(args) === false){
         return;
@@ -6,8 +7,6 @@ function 将棋タイム(args){
     将棋タイム.セットアップ();
 
     var $ = 将棋タイム.SilverState(将棋タイム, 将棋タイム.HTML, 将棋タイム.CSS, 将棋タイム.KIF解析(args.kif));
-    //KIF解析で$.全指し手の作成が行われているっぽい
-    // console.log($)
 
     if(args.myname && $.後手名.indexOf(args.myname) === 0){
         args.reverse = true;
@@ -18,22 +17,19 @@ function 将棋タイム(args){
 
     $.手数   = 将棋タイム.手数正規化(args.start, $.総手数);
     $.全局面 = 将棋タイム.全局面構築($.全指し手, $.初期局面);
-    //取り敢えず、$.全指し手 にDBの分岐データを直接入れることを目指す
     $.data   = {'reverse': args.reverse};
     $.args   = args;
 
     将棋タイム.初回描画($);
-    // 変数$にほとんどの情報が入っている
 
     return $.$将棋タイム;
 }
 
+
+
 将棋タイム.スタートアップ = function (event){
     var el = document.querySelectorAll("[type='kif']");
-    //querySelectorAll():引数で指定するセレクタの要素を取得
-
     for(var i = 0; i < el.length; i++){
-    //forで回しているが、基本elの要素数は1なので、一回しか実行されない
         将棋タイム({
             el: el[i],
             kif: el[i].textContent,
@@ -46,7 +42,6 @@ function 将棋タイム(args){
             nocp: el[i].hasAttribute("nocp"),
             myname: el[i].getAttribute("myname"),
             graph: el[i].getAttribute("graph"),
-            //ここに必要な引数を入れていけばいいはず
         });
     }
 };
@@ -266,7 +261,7 @@ function 将棋タイム(args){
 
     //指し手
     $.$指し手選択.selectedIndex = 手数;
-
+    
     //名前
     if($.先手名){
         $['$'+先手+'名'].textContent = "▲" + $.先手名;
@@ -370,23 +365,17 @@ function 将棋タイム(args){
 
 
 将棋タイム.描画.指し手選択 = function ($){
-    $.$指し手選択.innerHTML = '';
-
-    var option = document.createElement('option');
-    option.textContent = '開始局面';
-    $.$指し手選択.appendChild(option);
-
     var 全指し手 = $.全指し手[$.変化];
+
+    $.$指し手選択.innerHTML = '';
+    $.$指し手選択.add(new Option('開始局面'));
+
     for(var i = 1; i < 全指し手.length; i++){
-        option = document.createElement('option');
-        option.textContent = 全指し手[i].手数 + ' ' + 全指し手[i].手番 + 全指し手[i].手;
-        $.$指し手選択.appendChild(option);
+        $.$指し手選択.add(new Option(全指し手[i].手数 + ' ' + 全指し手[i].手番 + 全指し手[i].手));
     }
 
     if(全指し手.勝敗 && !$.変化){
-        option = document.createElement('option');
-        option.textContent = 全指し手.勝敗.表記;
-        $.$指し手選択.appendChild(option);
+        $.$指し手選択.add(new Option(全指し手.勝敗.表記));
     }
 };
 
@@ -597,7 +586,6 @@ function 将棋タイム(args){
         }
         else if(kif[i].match(/^[1\*]/)){
             一次解析.指し手 = kif.slice(i);
-            //空白行の削除
             break;
         }
     }
@@ -614,8 +602,7 @@ function 将棋タイム(args){
         '先手の持駒': 将棋タイム.KIF解析.持駒(一次解析.先手の持駒 || 一次解析.下手の持駒),
         '後手の持駒': 将棋タイム.KIF解析.持駒(一次解析.後手の持駒 || 一次解析.上手の持駒),
     };
-    解析結果.全指し手 = 将棋タイム.KIF解析.指し手(data, 解析結果.開始手番);
-    // 解析結果.全指し手 = 将棋タイム.KIF解析.指し手(一次解析.指し手, 解析結果.開始手番);
+    解析結果.全指し手 = 将棋タイム.KIF解析.指し手(一次解析.指し手, 解析結果.開始手番);
     解析結果.総手数   = 解析結果.全指し手[0].length - 1;
     解析結果.変化     = 0;
 
@@ -851,29 +838,24 @@ function 将棋タイム(args){
 
     for(var i = 0; i < kif.length; i++){
         kif[i] = kif[i].trim();
-        //前後の空白を削除
 
         if(kif[i].indexOf('*') === 0 && 全指し手[変化][手数]){ //指し手コメント
             全指し手[変化][手数].コメント += kif[i].replace(/^\*/, '') + '\n';
         }
         else if(kif[i].match(/^\d/)){
-        //変化も含めた全指しての処理
             手数++;
             将棋タイム.KIF解析.指し手.現在の手(全指し手[変化], kif[i], 手数, 開始手番);
         }
         else if(kif[i].indexOf('変化：') === 0){
-        //変化の処理
             手数 = Number(kif[i].match(/変化：(\d+)/)[1]);
-            //何手目を変化させる（入れ替える）のか
             全指し手.push(全指し手[0].slice(0, 手数));
             全指し手.変化手数.push(手数);
             手数--;
             変化++;
         }
     }
-
+    
     return 全指し手;
-    //全指し手[ [本筋の棋譜],[変化1の棋譜],[変化2の棋譜],...,変化手数[変化1の手数,変化2の手数,...] ]
 };
 
 
@@ -979,8 +961,9 @@ function 将棋タイム(args){
 
 
 
-将棋タイム.$将棋盤_onclick = function (event){
-    this.$次に移動ボタン.onclick();
+将棋タイム.$局面_onclick = function (event){
+    var rect = this.$局面.getBoundingClientRect();
+    (event.clientX-rect.left < rect.width/2) ? this.$前に移動ボタン.onclick() : this.$次に移動ボタン.onclick();
 };
 
 
@@ -1147,7 +1130,7 @@ function 将棋タイム(args){
         if(name.indexOf('$') !== 0){
             continue;
         }
-
+        
         var pos = name.lastIndexOf('_');
         if(pos === -1){
             $[name] = (typeof app[name] === 'function') ? app[name].bind($) : app[name];
@@ -1746,7 +1729,5 @@ function 将棋タイム(args){
 
 
 
-// document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', ()=>{将棋タイム.スタートアップ();} )  :  将棋タイム.スタートアップ();
-// document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', 将棋タイム.スタートアップ)  :  将棋タイム.スタートアップ();
-//documentがloading中のとき、Webページが読み込まれてすぐに'将棋タイム.スタートアップ'を実行
-//アロー関数を使わないと引数を渡せない
+document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', 将棋タイム.スタートアップ)  :  将棋タイム.スタートアップ();
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Kifu APP</title>
+    </head>
+    <body>
+        <h3>最終同期時刻：{{ latest_sync }}</h3>
+        <form action="{% url 'add_kifu:sync' %}" method="GET">
+            <input type="submit" value="同期" name="sync">
+        </form>
+        <form action="{% url 'add_kifu:save' %}" method="GET">
+            <table border="1">
+                {% for each_data in object_list %}
+                <tr>
+                    <td><input type="checkbox" name="game_id_data" value="{{each_data.id}}" ></td>
+                    <td>{{ each_data.game_id }}</td>
+                    <td>{{ each_data.my_result }}</td>
+                    <td>{{ each_data.save_limit }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" name="submit" value="チェックしたものを保存">
+        </form>
+    </body>
+</html>

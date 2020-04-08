@@ -1,0 +1,2 @@
+class MyNotDisplayException(Exception):
+    pass

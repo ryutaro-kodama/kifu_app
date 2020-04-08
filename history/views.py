@@ -5,7 +5,7 @@ from .models import Information
 # Create your views here.
 
 class InformationListView(ListView):
-    template_name = 'history/list.html'
+    template_name = 'history/index.html'
     model = Information
     paginate_by = 10
     queryset = Information.objects.order_by('date')

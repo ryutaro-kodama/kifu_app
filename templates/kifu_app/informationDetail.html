@@ -1,4 +1,4 @@
-{% extends "util/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Kifu APP
@@ -20,5 +20,5 @@ Kifu APP
         <td>{{ object.updated_at }}</td>
     </tr>
 </table>
-{% include "util/shogitime.html" %}
+{% include 'part.html' %}
 {% endblock %}

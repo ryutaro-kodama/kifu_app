@@ -1,0 +1,20 @@
+{% extends "util/base.html" %}
+
+{% block title %}
+Kifu APP
+{% endblock %}
+
+
+{% block body_content %}
+{% for each_data in object_list %}
+<h3>{{ each_data }}</h3>
+<table border="1">
+    <tr>
+        <td><a href="{% url 'history:detail' each_data.id %}">{{ each_data.date }}</a></td>
+        <td>{{ each_data.sente }}</td>
+        <td>{{ each_data.gote }}</td>
+        <td>{{ each_data.small_class }}</td>
+    </tr>
+</table>
+{% endfor %}
+{% endblock %}

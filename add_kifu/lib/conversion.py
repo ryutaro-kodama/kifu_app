@@ -28,10 +28,23 @@ class PieceConvert():
                       'Kaku':'角', 'Uma':'馬',
                       'Ou':'王'}
     nari_list = {'Fu':'To', 'Kyo':'NariKyo', 'Kei':'NariKei', 'Gin':'NariGin', 'Hisya':'Ryu', 'Kaku':'Uma'}
+    my_formalize_list = {'杏': '成香','圭': '成桂', '全': '成銀', '龍': '竜', '玉': '王'}
 
     @staticmethod
     def eigo2koma(eigo):
         return PieceConvert.eigo_koma_list[eigo]
+
+    @staticmethod
+    def koma2eigo(koma):
+        key = [k for k, v in PieceConvert.eigo_koma_list.items() if v == koma][0]
+        return key
+
+    @staticmethod
+    def myFormalize(koma):
+        if koma in PieceConvert.my_formalize_list:
+            return PieceConvert.my_formalize_list[koma]
+        else:
+            return koma
 
     @staticmethod
     def promote(koma):

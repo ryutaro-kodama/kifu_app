@@ -1,4 +1,5 @@
 import re
+import json
 from add_kifu.lib.operation.operation import Operation
 from add_kifu.lib.conversion import PieceConvert as pc
 from add_kifu.lib.conversion import NumberConvert as nc
@@ -220,3 +221,18 @@ class Shogitime():
         for branch, result in enumerate(result_list):
             self.all_move[branch]["勝敗"] = result
             # 各変化の辞書の末尾に勝敗を挿入
+
+    def export(self):
+        data = {"先手名": self.sente, "後手名": self.gote,
+                "開始手番": self.start_turn,
+                "最終手": ""
+                "手合割": self.handicap,
+                "評価値": [],
+                "読み筋": ["-"],
+                "初期局面": {'駒': self.board,
+                            "先手の持駒": self.sente_having,
+                            "後手の持駒": self.gote_having},
+                "全指し手": self.all_move,
+                "総手数": len(self.all_move[0])-1,
+                "変化": 0}
+        return json.dumps(data)

@@ -1,10 +1,10 @@
 
-export function 将棋タイム(args){
+export function 将棋タイム(args, static_url){
     if(将棋タイム.引数確認(args) === false){
         return;
     }
 
-    将棋タイム.セットアップ();
+    将棋タイム.セットアップ(static_url);
 
     var $ = 将棋タイム.SilverState(将棋タイム, 将棋タイム.HTML, 将棋タイム.CSS, args.my_data);
     // var $ = 将棋タイム.SilverState(将棋タイム, 将棋タイム.HTML, 将棋タイム.CSS, 将棋タイム.KIF解析(args.kif));
@@ -26,7 +26,7 @@ export function 将棋タイム(args){
     return $.$将棋タイム;
 }
 
-将棋タイム.スタートアップ = function (data){
+将棋タイム.スタートアップ = function (data, static_url){
     console.log(data)
     var el = document.querySelectorAll("[type='kif']");
     for(var i = 0; i < el.length; i++){
@@ -43,28 +43,27 @@ export function 将棋タイム(args){
             myname: el[i].getAttribute("myname"),
             graph: el[i].getAttribute("graph"),
             my_data: data,
-        });
+        }, 
+        static_url);
     }
 };
 
-将棋タイム.normalStart = function (arg){
-    将棋タイム.スタートアップ(arg)
+将棋タイム.normalStart = function (arg, static_url){
+    将棋タイム.スタートアップ(arg, static_url)
 }
 
 将棋タイム.aEL = function (event){
     // こっちの動作確認はまだ
-    将棋タイム.スタートアップ(this.data)
+    将棋タイム.スタートアップ(this.data, this.static_url)
 }
 
 
 
-将棋タイム.セットアップ = function (){
+将棋タイム.セットアップ = function (static_url){
     // var currentScript   = document.querySelector("script[src*='shogitime.js']");
-    将棋タイム.URL      = "/static/js/shogitime-master/";
-    // TODO URLを固定値ではなく、動的に渡す
     // 将棋タイム.URL      = currentScript.src.replace(/\/[^\/]*$/, '') + '/'; //PHPの dirname() 相当
-    将棋タイム.CSS      = 将棋タイム.CSS.replace(/url\([\'\"]?/g, "$&" + 将棋タイム.URL); //CSSの「URL()」の内容を、相対パスからURLに変換する
-    将棋タイム.駒音.src = 将棋タイム.URL + "駒音.mp3";
+    将棋タイム.CSS      = 将棋タイム.CSS.replace(/url\([\'\"]?/g, "$&" + static_url); //CSSの「URL()」の内容を、相対パスからURLに変換する
+    将棋タイム.駒音.src = static_url + "駒音.mp3";
 
     将棋タイム.セットアップ = function (){};
 };
@@ -145,7 +144,7 @@ export function 将棋タイム(args){
 
 将棋タイム.全局面構築 = function(指し手一覧, 初期局面){
     var 全局面 = [];
-    
+
     for(var i = 0; i < Object.keys(指し手一覧).length-1; i++){
     // "変化手数"のkey分、要素数を1引いておく
     // for(var i = 0; i < 指し手一覧.length; i++){
@@ -281,7 +280,7 @@ export function 将棋タイム(args){
 
     //指し手
     $.$指し手選択.selectedIndex = 手数;
-    
+
     //名前
     if($.先手名){
         $['$'+先手+'名'].textContent = "▲" + $.先手名;
@@ -510,7 +509,7 @@ export function 将棋タイム(args){
         }
         座標.push({'x':i*X刻み, 'y':Y半分-(y/Ymax*Y半分)});
     }
-    
+
     return 座標
 };
 

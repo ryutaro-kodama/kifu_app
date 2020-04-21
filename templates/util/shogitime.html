@@ -5,10 +5,15 @@
     // import {hello} from "{% static 'js/sample.js' %}";
     import {将棋タイム} from "{% static 'js/shogitime-master/my_shogitime.js' %}";
 
+    const static_url = "{% static 'src/shogitime/' %}"
+
     // hello();
+
     var tmp = '{{ data|safe }}';
     // "|safe"を付けることで、エスケープを解除する
+
     var arg = JSON.parse(tmp);
     // console.log(arg)
-    document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', {data: arg, handleEvent: 将棋タイム.aEL})  :  将棋タイム.スタートアップ(arg);
+
+    document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', {data: arg, static_url: static_url, handleEvent: 将棋タイム.aEL})  :  将棋タイム.スタートアップ(arg, static_url);
 </script>

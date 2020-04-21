@@ -15,7 +15,6 @@ class Shogitime():
         self.data_kif = []
         self.all_move = [ [ {"手数": 0, "コメント": ""} ] ]
 
-
     def getKifFile(self, path):
         with open(path, mode='r', encoding='utf-8') as f:
             text_list = f.readlines()
@@ -222,10 +221,12 @@ class Shogitime():
             self.all_move[branch]["勝敗"] = result
             # 各変化の辞書の末尾に勝敗を挿入
 
+        self.all_move["変化手数"] = branch_list
+
     def export(self):
         data = {"先手名": self.sente, "後手名": self.gote,
                 "開始手番": self.start_turn,
-                "最終手": ""
+                "最終手": "",
                 "手合割": self.handicap,
                 "評価値": [],
                 "読み筋": ["-"],

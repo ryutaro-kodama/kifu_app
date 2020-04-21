@@ -25,6 +25,7 @@ class SmallClass(models.Model):
         return self.name
 
 class Information(models.Model):
+    filename = models.CharField(max_length=100)
     date = models.DateTimeField()
     sente = models.CharField(max_length=50)
     gote = models.CharField(max_length=50)

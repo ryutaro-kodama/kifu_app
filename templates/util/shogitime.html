@@ -1,24 +1,14 @@
+{% load static %}
 <script type="kif">
-    1 ２六歩(27)
-    2 ４二銀(31)
-    3 ２五歩(26)
-    4 ３二金(41)
-    5 ７六歩(77)
-    6 ３一角(22)
-    7 ３八銀(39)
-    8 ５四歩(53)
-    9 ２七銀(38)
-    10 ５三銀(42)
-    11 ２六銀(27)
-    // $(document).ready( function(){
-    //     // ページ読み込み時に実行したい処理
-    //     $(".将棋タイム").appendTo("#js_shogi");
-    // });
+</script>
+<script type="module">
+    // import {hello} from "{% static 'js/sample.js' %}";
+    import {将棋タイム} from "{% static 'js/shogitime-master/my_shogitime.js' %}";
 
-    // // var data = "{{data}}";
-    // // data = data.split(',');
-    // // //文字列を配列へ再変換
-    // // //この変数はグローバル
-
-    // document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', ()=>{将棋タイム.スタートアップ();} )  :  将棋タイム.スタートアップ();
+    // hello();
+    var tmp = '{{ data|safe }}';
+    // "|safe"を付けることで、エスケープを解除する
+    var arg = JSON.parse(tmp);
+    // console.log(arg)
+    document.readyState === 'loading'  ?  document.addEventListener('DOMContentLoaded', {data: arg, handleEvent: 将棋タイム.aEL})  :  将棋タイム.スタートアップ(arg);
 </script>

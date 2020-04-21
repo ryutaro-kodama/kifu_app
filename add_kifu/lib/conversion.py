@@ -26,9 +26,9 @@ class PieceConvert():
                       'Kin':'金',
                       'Hisya':'飛', 'Ryu':'竜',
                       'Kaku':'角', 'Uma':'馬',
-                      'Ou':'王'}
+                      'Ou':'玉'}
     nari_list = {'Fu':'To', 'Kyo':'NariKyo', 'Kei':'NariKei', 'Gin':'NariGin', 'Hisya':'Ryu', 'Kaku':'Uma'}
-    my_formalize_list = {'杏': '成香','圭': '成桂', '全': '成銀', '龍': '竜', '玉': '王'}
+    my_formalize_list = {'杏': '成香','圭': '成桂', '全': '成銀', '龍': '竜', '王': '玉'}
 
     @staticmethod
     def eigo2koma(eigo):

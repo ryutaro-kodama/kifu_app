@@ -12,8 +12,8 @@ db.sqlite3-journal
 media
 
 demo*.py
+add_kifu/lib/getKifFile/htmlConvert.py
 add_kifu/lib/historyList/getHistoryList.py
-add_kifu/lib/operation/htmlConvert.py
 add_kifu/lib/toKif.py
 kifu_app/lib
 history/lib

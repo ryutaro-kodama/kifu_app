@@ -1,5 +1,10 @@
-from .operation import Operation
+import datetime as dt
 
+from lib.operation.operation import Operation
+from lib.conversion import NumberConvert as nc
+from lib.conversion import PieceConvert as pc
+
+# (Operationを継承することで)実際に駒を動かしつつ、棋譜形式に合ったテキストを作成
 class MakeKifFormat(Operation):
     # @param
     ## data = [(前座標のペア), (後座標のペア), 移動前の駒名, '同'フラグ, '打'フラグ, '成'フラグ]
@@ -83,17 +88,3 @@ class MakeKifFormat(Operation):
             message = f'引き分け'
 
         return f"まで{count}手で{message}"
-
-    def makeTextList(self, datetime, players, kifu, result):
-        text_list = [f'開始日時：{datetime}',
-                     f'先手：{players["sente"]}',
-                     f'後手：{players["gote"]}',
-                     '']
-
-        for x in range(len(kifu)-1):
-            text_list.append(f'{x+1}  {kifu[x]}')
-
-        text_list.append('')
-        text_list.append(result)
-
-        return text_list

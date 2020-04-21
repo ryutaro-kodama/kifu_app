@@ -1,8 +1,9 @@
 import re
 import json
-from add_kifu.lib.operation.operation import Operation
-from add_kifu.lib.conversion import PieceConvert as pc
-from add_kifu.lib.conversion import NumberConvert as nc
+
+from lib.operation.operation import Operation
+from lib.conversion import PieceConvert as pc
+from lib.conversion import NumberConvert as nc
 
 class Shogitime():
     def __init__(self):

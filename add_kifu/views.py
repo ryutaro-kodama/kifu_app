@@ -10,7 +10,7 @@ import datetime as dt
 import re
 
 from .lib.historyList.getHistoryList import GetHistoryList
-from .lib.operation.operation import Operation
+from .lib.operation.makeKifFormat import MakeKifFormat
 from .lib.operation.htmlConvert import HtmlConvert
 from .lib.operation.scraping import Scraping
 from .lib.exception.myNotDisplayException import MyNotDisplayException
@@ -119,7 +119,7 @@ def __get30DaysLater(game_id):
         return save_limit
 
 def save(request):
-    ope = Operation()
+    mkf = MakeKifFormat()
     id_data = request.GET.getlist("game_id_data")
 
     for x in id_data:
@@ -127,7 +127,7 @@ def save(request):
         game_id = history_list_object.game_id
         try:
             filename, datetime, players, kifu, result = __getKifuData(game_id, ope)
-            text_list = ope.makeTextList(datetime, players, kifu, result)
+            text_list = mkf.makeTextList(datetime, players, kifu, result)
             # text_list = [対局日時, 先手, 後手, , 1手目, ..., 最終手, , 勝敗結果]
         except CantScrapingException as e:
             print(e)
@@ -163,8 +163,8 @@ def __getKifuData(game_id, ope):
 
     for symbol in symbol_list:
         old_x, old_y, x, y, name, promoted = hc.convert(symbol)
-        data = ope.operate(old_x, old_y, x, y, name, promoted)
-        te = ope.getKifu(data)
+        data = mkf.operate(old_x, old_y, x, y, name, promoted)
+        te = mkf.getKifu(data)
         kifu.append(te)
 
     try:
@@ -176,11 +176,11 @@ def __getKifuData(game_id, ope):
         print("スクレイピングが出来ませんでした")
         raise CantScrapingException("スクレイピングが出来ませんでした")
 
-    kifu.append(ope.getFinalMove(hc.result_reason))
+    kifu.append(mkf.getFinalMove(hc.result_reason))
 
-    datetime = ope.getDatetime(hc.datetime)
-    players = ope.getPlayers(hc.players["sente"], hc.players["s_rank"], hc.players["gote"], hc.players["g_rank"])
-    filename = ope.getFilename(hc.players["sente"], hc.players["gote"], hc.datetime)
-    result = ope.getResult(len(kifu)-1, hc.result, len(kifu)%2)
+    datetime = mkf.getDatetime(hc.datetime)
+    players = mkf.getPlayers(hc.players["sente"], hc.players["s_rank"], hc.players["gote"], hc.players["g_rank"])
+    filename = mkf.getFilename(hc.players["sente"], hc.players["gote"], hc.datetime)
+    result = mkf.getResult(len(kifu)-1, hc.result, len(kifu)%2)
 
     return filename, datetime, players, kifu, result

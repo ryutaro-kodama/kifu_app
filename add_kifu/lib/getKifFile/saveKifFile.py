@@ -29,8 +29,8 @@ class SaveKifFile():
                      f'後手：{self.gote}',
                      '']
 
-        for x in range(len(self.kifu)-1):
-            text_list.append(f'{x+1}  {self.kifu[x]}')
+        for index, move in enumerate(self.kifu):
+            text_list.append(f'{index+1}  {move}')
 
         text_list.append('')
         text_list.append(self.result)

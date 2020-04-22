@@ -18,6 +18,6 @@ class InformationDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        filename = "20200310_141940-ryu914-hiroton777.kifu"
+        filename = context["object"].filename
         context["data"] = convert2shogitime(filename)
         return context

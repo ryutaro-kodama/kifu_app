@@ -21,9 +21,9 @@ class SaveKifFile():
         self.kifu = kifu
         self.result = result
 
-        self.save_path = BASE_DIR + env.get_value("KIFU_PATH_FROM_ROOT") + self.filename
-
     def makeKifFile(self):
+        save_path = BASE_DIR + env.get_value("KIFU_PATH_FROM_ROOT") + self.filename
+
         text_list = [f'開始日時：{self.datetime}',
                      f'先手：{self.sente}',
                      f'後手：{self.gote}',
@@ -36,10 +36,11 @@ class SaveKifFile():
         text_list.append(self.result)
         # text_list = [対局日時, 先手, 後手, , 1手目, ..., 最終手, , 勝敗結果]
 
-        wf.writeFile(self.save_path, text_list)
+        wf.writeFile(save_path, text_list)
 
     def insertInformationTable(self, my_result):
         information = Information(
+            filename = self.filename,
             date = dt.datetime.strptime(self.datetime + '+0900', "%Y/%m/%d %H:%M:%S%z"),
             sente = self.sente,
             gote = self.gote,

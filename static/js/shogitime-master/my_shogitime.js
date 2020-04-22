@@ -43,7 +43,7 @@ export function 将棋タイム(args, static_url){
             myname: el[i].getAttribute("myname"),
             graph: el[i].getAttribute("graph"),
             my_data: data,
-        }, 
+        },
         static_url);
     }
 };
@@ -1000,7 +1000,7 @@ export function 将棋タイム(args, static_url){
 
 将棋タイム.$前に移動ボタン_onclick = function (event){
     if(this.$指し手選択.selectedIndex > this.総手数){
-        this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length-1 - 2;
+        this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length - 2;
     }
     else if(this.手数 > 0){
         this.手数--;
@@ -1019,7 +1019,7 @@ export function 将棋タイム(args, static_url){
         将棋タイム.駒音.再生();
     }
     else{
-        this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length-1 - 1;
+        this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length - 1;
     }
 };
 
@@ -1028,7 +1028,7 @@ export function 将棋タイム(args, static_url){
 将棋タイム.$最後に移動ボタン_onclick = function(event){
     this.手数 = Object.keys(this.全指し手[this.変化]).length-1 - 1;
     将棋タイム.描画(this);
-    this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length-1 - 1;
+    this.$指し手選択.selectedIndex = Object.keys(this.$指し手選択).length - 1;
 };
 
 

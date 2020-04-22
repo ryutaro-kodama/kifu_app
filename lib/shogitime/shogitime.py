@@ -235,6 +235,7 @@ class Shogitime():
                             "先手の持駒": self.sente_having,
                             "後手の持駒": self.gote_having},
                 "全指し手": self.all_move,
-                "総手数": len(self.all_move[0])-1,
+                "総手数": len(self.all_move[0])-2,
+                # 0手目と勝敗を除く
                 "変化": 0}
         return json.dumps(data)

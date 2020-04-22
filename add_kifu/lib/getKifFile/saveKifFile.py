@@ -46,6 +46,6 @@ class SaveKifFile():
             gote = self.gote,
             result = (len(self.kifu)+1) % 2,     # TODO 引き分けに未対応
             my_result = my_result,
-            small_class = get_object_or_404(SmallClass, pk=1)       # TODO 小分類が固定値
+            small_class = None
         )
         information.save()

@@ -33,7 +33,7 @@ class Information(models.Model):
     #先手勝ち:0, 後手勝ち:1, 引き分け:2
     my_result = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(3)])
     #自分勝ち:0, 相手勝ち:1, 引き分け:2
-    small_class = models.ForeignKey(SmallClass, on_delete=models.CASCADE)
+    small_class = models.ForeignKey(SmallClass, on_delete=models.CASCADE, null=True)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 

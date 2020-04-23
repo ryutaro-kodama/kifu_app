@@ -23,7 +23,7 @@ class MakeKifFormat(Operation):
             name = pc.eigo2koma(data[2])
             promotion = "成"
         else:
-            name = pc.promote(pc.eigo2koma(data[2]))[0]
+            name = pc.eigo2koma(pc.promote(data[2])[0])
             promotion = ""
 
         if data[4]:
